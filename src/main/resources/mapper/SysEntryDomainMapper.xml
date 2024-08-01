@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qrcode.rewrite.mapper.SysEntryDomainMapper">
+
+    <resultMap type="com.qrcode.rewrite.pojo.User" id="userResultMap">
+        <id property="userId" column="userId" />
+        <result property="userName" column="userName" />
+        <result property="password" column="password" />
+    </resultMap>
+
+    <select id="getUserInfo" parameterType="java.lang.String" resultMap="userResultMap">
+        SELECT * FROM user where userId=#{userId}
+    </select>
+
+</mapper>

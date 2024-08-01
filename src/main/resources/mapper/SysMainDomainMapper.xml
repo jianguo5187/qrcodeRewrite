@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qrcode.rewrite.mapper.SysMainDomainMapper">
+
+    <select id="getMainUrlByWebType" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT main_url
+        FROM sys_main_domain
+        where web_type=#{webType}
+          and del_flag = '0'
+        limit 1
+    </select>
+
+</mapper>
