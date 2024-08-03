@@ -3,14 +3,36 @@
 
 <mapper namespace="com.qrcode.rewrite.mapper.SysEntryDomainMapper">
 
-    <resultMap type="com.qrcode.rewrite.pojo.User" id="userResultMap">
-        <id property="userId" column="userId" />
-        <result property="userName" column="userName" />
-        <result property="password" column="password" />
+    <resultMap type="com.qrcode.rewrite.pojo.SysEntryDomain" id="entryDomainResultMap">
+        <id property="id" column="id" />
+        <result property="webType" column="web_type" />
+        <result property="qrUrl" column="qr_url" />
+        <result property="webName" column="web_name" />
+        <result property="delFlag" column="del_flag" />
+        <result property="createTime" column="create_time" />
     </resultMap>
 
-    <select id="getUserInfo" parameterType="java.lang.String" resultMap="userResultMap">
-        SELECT * FROM user where userId=#{userId}
+    <select id="getEntryDomainInfoByWebType" parameterType="java.lang.String" resultMap="entryDomainResultMap">
+        SELECT *
+        FROM sys_entry_domain
+        where web_type=#{webType}
+        limit 1
     </select>
+
+    <insert id="insertEntryDomain" parameterType="com.qrcode.rewrite.pojo.SysEntryDomain" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sys_entry_domain(`web_type`, `qr_url`, `web_name`, `del_flag`, `create_time`)
+        VALUES (#{webType}, #{qrUrl}, #{webName}, '0', sysdate());
+    </insert>
+
+    <update id="updateEntryDomain" parameterType="com.qrcode.rewrite.pojo.SysEntryDomain">
+        UPDATE sys_entry_domain
+        SET `web_type` = #{webType},
+            `qr_url` = #{qrUrl},
+            `web_name` = #{webName},
+            `del_flag` = '0',
+            `create_time` = sysdate()
+        WHERE
+            `id` = #{id}
+    </update>
 
 </mapper>

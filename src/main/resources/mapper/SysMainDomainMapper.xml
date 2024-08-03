@@ -11,4 +11,35 @@
         limit 1
     </select>
 
+
+    <resultMap type="com.qrcode.rewrite.pojo.SysMainDomain" id="mainDomainResultMap">
+        <id property="id" column="id" />
+        <result property="webType" column="web_type" />
+        <result property="mainUrl" column="main_url" />
+        <result property="delFlag" column="del_flag" />
+        <result property="createTime" column="create_time" />
+    </resultMap>
+
+    <select id="getMainDomainInfoByWebType" parameterType="java.lang.String" resultMap="mainDomainResultMap">
+        SELECT *
+        FROM sys_main_domain
+        where web_type=#{webType}
+        limit 1
+    </select>
+
+    <insert id="insertMainDomain" parameterType="com.qrcode.rewrite.pojo.SysMainDomain" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sys_main_domain(`web_type`, `main_url`, `del_flag`, `create_time`)
+        VALUES (#{webType}, #{mainUrl}, '0', sysdate());
+    </insert>
+
+    <update id="updateMainDomain" parameterType="com.qrcode.rewrite.pojo.SysMainDomain">
+        UPDATE sys_main_domain
+        SET `web_type` = #{webType},
+            `main_url` = #{mainUrl},
+            `del_flag` = '0',
+            `create_time` = sysdate()
+        WHERE
+            `id` = #{id}
+    </update>
+
 </mapper>
