@@ -23,7 +23,10 @@ public class RedirectController {
                 if(!redirectUrl.startsWith("http") && !redirectUrl.startsWith("https")){
                     redirectUrl = "http://" + redirectUrl;
                 }
-                return new ModelAndView("redirect:" + redirectUrl + "?parentUserId=" + parentUserId);
+                if(parentUserId != null && parentUserId > 0){
+                    redirectUrl = redirectUrl + "?parentUserId=" + parentUserId;
+                }
+                return new ModelAndView("redirect:" + redirectUrl);
             }else{
 
                 // 如果没有提供rewrite参数，或者参数为空，可以重定向到默认页面
