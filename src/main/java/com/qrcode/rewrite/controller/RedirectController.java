@@ -1,8 +1,12 @@
 package com.qrcode.rewrite.controller;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.qrcode.rewrite.service.SysMainDomainService;
+import com.qrcode.rewrite.util.HttpUtils;
+import com.qrcode.rewrite.util.IpUtils;
+import com.qrcode.rewrite.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -11,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.Random;
 
 @Controller
@@ -22,10 +27,30 @@ public class RedirectController {
     @GetMapping("/")
     public ModelAndView redirectBasedOnQueryParam(HttpServletRequest request, HttpServletResponse response, @RequestParam(name = "webType", required = false) String webType, @RequestParam(name = "parentUserId", required = false) Long parentUserId) throws InterruptedException {
 
+        String ip = IpUtils.getIpAddr(request);
+//        String ip = getIpAddr(request);
+        System.out.println(new Date() + " IpAddress : " + ip);
+
         if (webType != null && !webType.isEmpty()) {
 
             String redirectUrl = mainDomainService.getMainUrlByWebType(webType); // 可能需要处理为完整的URL，例如添加协议或路径
             if(!StringUtils.isEmpty(redirectUrl)){
+
+                String ipCheckResult = HttpUtils.sendGet(redirectUrl + "/dpc/system/app/checkIpAddressApi?ipAddress=" + ip);
+//                String ipCheckResult = HttpUtils.sendGet("http://localhost:8080" + "/system/app/checkIpAddressApi?ipAddress=" + "182.239.115.46");
+
+                if (StringUtils.isEmpty(ipCheckResult))
+                {
+                    return new ModelAndView("kongbai.html");
+                }
+
+                JSONObject obj = JSON.parseObject(ipCheckResult);
+                String code = obj.getString("code");
+                String data = obj.getString("data");
+                if(!StringUtils.equals(code,"200") || StringUtils.equals(data,"0")){
+                    return new ModelAndView("kongbai.html");
+                }
+
                 String redirectHostUrl = request.getRequestURL().toString();
                 if(redirectHostUrl.endsWith("/")){
                     redirectHostUrl = redirectHostUrl.substring(0,redirectHostUrl.length()-1);
