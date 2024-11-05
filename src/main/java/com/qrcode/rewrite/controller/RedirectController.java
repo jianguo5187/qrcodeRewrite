@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Random;
 
@@ -157,8 +158,10 @@ public class RedirectController {
 //            redirectUrl = "http://" + generateSoleName() + "." + redirectUrl + ":8443";
 //        }
 //
+        Instant now = Instant.now();
+        Long timestamp = now.toEpochMilli();
         if(parentUserId != null && parentUserId > 0){
-            redirectUrl = redirectUrl + "?parentUserId=" + parentUserId;
+            redirectUrl = redirectUrl + "?parentUserId=" + parentUserId + "&time=" + timestamp;
         }
         System.out.println("redirectUrl : " + redirectUrl);
         return new ModelAndView("redirect:" + redirectUrl);
