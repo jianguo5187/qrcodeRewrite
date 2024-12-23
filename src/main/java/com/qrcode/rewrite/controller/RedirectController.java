@@ -1,6 +1,7 @@
 package com.qrcode.rewrite.controller;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.qrcode.rewrite.service.SysEntryDomainService;
 import com.qrcode.rewrite.service.SysMainDomainService;
 import com.qrcode.rewrite.util.HttpUtils;
 import com.qrcode.rewrite.util.IpUtils;
@@ -25,6 +26,9 @@ public class RedirectController {
     @Autowired
     private SysMainDomainService mainDomainService;
 
+    @Autowired
+    private SysEntryDomainService entryDomainService;
+
     @GetMapping("/")
     public ModelAndView redirectBasedOnQueryParam(HttpServletRequest request, HttpServletResponse response, @RequestParam(name = "webType", required = false) String webType, @RequestParam(name = "parentUserId", required = false) Long parentUserId) throws InterruptedException {
 
@@ -33,6 +37,17 @@ public class RedirectController {
         System.out.println(new Date() + " IpAddress : " + ip);
 
         if (webType != null && !webType.isEmpty()) {
+
+            String entryUrl = entryDomainService.getEntryUrlByWebType(webType); // 入口域名
+            String excuetUrl = request.getRequestURL().toString().replace("https://","").replace("http://","");
+            String[] excuteUrlArg = excuetUrl.split(":");
+            String excuteUrl = excuteUrlArg[0].replace(request.getRequestURI(),"");
+            entryUrl = entryUrl.replace("https://","").replace("http://","").replace(request.getRequestURI(),"");
+            System.out.println("excuteUrl :" + excuteUrl);
+            System.out.println("entryUrl :" + entryUrl);
+            if(!StringUtils.equals(entryUrl,excuteUrl)){
+                return new ModelAndView("redirect:http://www.baidu.com");
+            }
 
             String redirectUrl = mainDomainService.getMainUrlByWebType(webType); // 可能需要处理为完整的URL，例如添加协议或路径
             if(!StringUtils.isEmpty(redirectUrl)){

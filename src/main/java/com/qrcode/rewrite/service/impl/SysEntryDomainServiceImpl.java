@@ -13,6 +13,11 @@ public class SysEntryDomainServiceImpl implements SysEntryDomainService {
     private SysEntryDomainMapper mainDomainMapper;
 
     @Override
+    public String getEntryUrlByWebType(String webType) {
+        return mainDomainMapper.getEntryUrlByWebType(webType);
+    }
+
+    @Override
     public SysEntryDomain getEntryDomainInfoByWebType(String webType) {
         return mainDomainMapper.getEntryDomainInfoByWebType(webType);
     }

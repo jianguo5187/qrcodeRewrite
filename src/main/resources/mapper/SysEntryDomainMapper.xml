@@ -3,6 +3,14 @@
 
 <mapper namespace="com.qrcode.rewrite.mapper.SysEntryDomainMapper">
 
+    <select id="getEntryUrlByWebType" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT qr_url
+        FROM sys_entry_domain
+        where web_type=#{webType}
+          and del_flag = '0'
+            limit 1
+    </select>
+
     <resultMap type="com.qrcode.rewrite.pojo.SysEntryDomain" id="entryDomainResultMap">
         <id property="id" column="id" />
         <result property="webType" column="web_type" />

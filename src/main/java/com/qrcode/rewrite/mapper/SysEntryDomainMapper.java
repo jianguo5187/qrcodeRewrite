@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SysEntryDomainMapper {
 
+    public String getEntryUrlByWebType(String webType);
+
     public SysEntryDomain getEntryDomainInfoByWebType(String webType);
 
     public int insertEntryDomain(SysEntryDomain sysEntryDomain);
